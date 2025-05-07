@@ -16,6 +16,7 @@ class Dashboard extends Page
 
     public ?string $make = null;
     public ?string $model = null;
+    public ?string $type = null;
     public ?int $year = null;
     public ?string $priceNote = null;
 
@@ -35,17 +36,23 @@ class Dashboard extends Page
                 ->label('Make')
                 ->options(Automotive::query()->distinct()->pluck('make', 'make'))
                 ->reactive()
-                ->afterStateUpdated(fn () => $this->model = null),
+                ->afterStateUpdated(fn() => $this->model = null),
 
             Forms\Components\Select::make('model')
                 ->label('Model')
-                ->options(fn () => $this->make ? Automotive::where('make', $this->make)->distinct()->pluck('model', 'model') : [])
+                ->options(fn() => $this->make ? Automotive::where('make', $this->make)->distinct()->pluck('model', 'model') : [])
                 ->reactive()
-                ->afterStateUpdated(fn () => $this->year = null),
+                ->afterStateUpdated(fn() => $this->year = null),
 
             Forms\Components\Select::make('year')
                 ->label('Year')
-                ->options(fn () => $this->model ? Automotive::where('make', $this->make)->where('model', $this->model)->distinct()->pluck('year', 'year') : [])
+                ->options(fn() => $this->model ? Automotive::where('make', $this->make)->where('model', $this->model)->distinct()->pluck('year', 'year') : [])
+                ->reactive()
+                ->afterStateUpdated(fn() => $this->type = null),
+
+            Forms\Components\Select::make('type')
+                ->label('Type')
+                ->options(fn() => $this->model ? Automotive::where('make', $this->make)->where('model', $this->model)->where('year', $this->year)->distinct()->pluck('type', 'type') : [])
                 ->reactive()
                 ->afterStateUpdated(function () {
                     $this->fetchPriceNote();
@@ -58,6 +65,7 @@ class Dashboard extends Page
         $record = Automotive::where('make', $this->make)
             ->where('model', $this->model)
             ->where('year', $this->year)
+            ->where('type', $this->type)
             ->first();
 
         $this->priceNote = $record?->price_note ?? 'Not found';

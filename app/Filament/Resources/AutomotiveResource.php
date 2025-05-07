@@ -48,6 +48,7 @@ class AutomotiveResource extends Resource
                         ->pluck('model')
                         ->toArray())->reactive(),
                 Forms\Components\TextInput::make('year')->required()->rule('numeric'),
+                Forms\Components\TextInput::make('type')->required(),
                 Forms\Components\TextArea::make('price_note')->required(),
             ]);
     }
@@ -59,6 +60,7 @@ class AutomotiveResource extends Resource
                 Tables\Columns\TextColumn::make('make')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('model')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('year')->sortable(),
+                Tables\Columns\TextColumn::make('type')->sortable(),
                 Tables\Columns\TextColumn::make('price_note'),
             ])
             ->filters([

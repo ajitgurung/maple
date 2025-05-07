@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Automotive extends Model
 {
-    public $fillable = ['make', 'model', 'year', 'price_note'];
+    public $fillable = ['make', 'model', 'year', 'type', 'price_note'];
 }

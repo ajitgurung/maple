@@ -6,6 +6,7 @@ use App\Models\Automotive;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Illuminate\Support\Facades\Log;
 
 class AutomotiveImporter extends Importer
 {
@@ -24,9 +25,11 @@ class AutomotiveImporter extends Importer
                 ->requiredMapping()
                 ->numeric()
                 ->rules(['required', 'integer']),
-            ImportColumn::make('price_note')
+            ImportColumn::make('type')
                 ->requiredMapping()
                 ->rules(['required']),
+            ImportColumn::make('price_note')
+                ->requiredMapping(),
         ];
     }
 
@@ -36,9 +39,14 @@ class AutomotiveImporter extends Importer
             'make' => $this->data['make'],
             'model' => $this->data['model'],
             'year' => $this->data['year'],
+            'type' => $this->data['type'],
         ]);
 
-        return new Automotive();
+        if (!$automotive->exists) {
+            Log::info('Duplicate found and skipped: ', $this->data);
+        }
+    
+        return $automotive;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

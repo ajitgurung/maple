@@ -14,7 +14,7 @@
             <div class="p-4 bg-success-100 text-success-800 rounded-lg shadow">
                 <strong>Price:</strong> {{ $priceNote }}
             </div>
-        @elseif ($make && $model && $year)
+        @elseif ($make && $model && $year && $type)
             <div class="p-4 bg-danger-100 text-danger-800 rounded-lg shadow">
                 No Price Note found for the selected Make, Model, and Year.
             </div>
